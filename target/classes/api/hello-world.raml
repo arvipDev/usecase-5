@@ -1,0 +1,29 @@
+#%RAML 1.0
+title: hello-world
+securitySchemes:
+  basic_auth: !include SecurityScheme/basic_auth.raml
+securedBy: basic_auth
+
+/helloWorld:
+  get:
+    displayName: Greetings
+    description: Greeting the world
+    securedBy: basic_auth
+    queryParameters:
+      greetingMessage:
+        type: string
+        required: false
+        default: Hello
+      greetingTo:
+        type: string
+        required: false
+        default: World!
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include DataTypes/greetingResponse.raml
+            example: !include Example/greetingResponseExample.raml
+              
+
+         

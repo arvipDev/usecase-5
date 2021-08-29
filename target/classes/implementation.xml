@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:twilio="http://www.mulesoft.org/schema/mule/twilio" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/twilio http://www.mulesoft.org/schema/mule/twilio/current/mule-twilio.xsd">
+	<flow name="sendGreetingTo" doc:id="992d783a-a5f7-4a22-ba00-872f915d5739" >
+		<set-variable value="#[vars.greetingTo]" doc:name="sending greetings to" doc:id="bbcac99b-e97d-43b1-9693-40296e21b383" variableName="to"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a5a9f768-fd6b-409a-8db4-0d41dbcf8916" message="#[vars.to]"/>
+		<choice doc:name="Choice" doc:id="dd600cfb-dd4a-49cf-b91f-299ac3f6da5f" >
+			<when expression='#[vars.to == "Arvind"]'>
+				<flow-ref doc:name="sendToArvind" doc:id="beb3421c-1c24-4646-9fa5-fa9df44803fb" name="sendToArvind"/>
+			</when>
+			<when expression='#[vars.to == "Purushotham"]'>
+				<flow-ref doc:name="sendToPurushotham" doc:id="2299df88-dce3-4fa6-86b9-0c36cbf8af0c" name="sendToPurushotham"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="sendToAll" doc:id="235f764d-1768-4071-a36c-171c74592ac6" name="sendToAll"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="sendToArvind" doc:id="a3b7a5ac-339d-407e-8a0b-5da3c41230e8" >
+		<logger level="INFO" doc:name="Logger" doc:id="325861fe-8125-434e-acc8-28a0ef4b1274" message='#["Message is sent to " ++ vars.to as String ++ ", sendToArvind Flow is called"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="9cd464c2-6880-4c58-8a9f-52ccaf0f16af" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	originalGreeting: message.attributes.queryParams.greetingMessage,
+	response: message.payload.response,
+	origin: message.payload.origin,
+	responder: {
+		responderID: message.payload.responder.responderID,
+		responderName: vars.greetingTo
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="sendToPurushotham" doc:id="10fbca41-2f6d-42de-9a51-2651a29cfe30" >
+		<logger level="INFO" doc:name="Logger" doc:id="d8d12e40-8faf-490e-9e5d-10998b608a6a" message='#["Message is sent to " ++ vars.to as String ++ ", sendToPurushotham Flow is called"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="a62ba436-791c-426a-8a78-7c85f1122f75" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	originalGreeting: message.attributes.queryParams.greetingMessage,
+	response: message.payload.response,
+	origin: message.payload.origin,
+	responder: {
+		responderID: message.payload.responder.responderID,
+		responderName: vars.greetingTo
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="sendToAll" doc:id="dd5f9a35-279d-432c-9978-9d23f3ca654f" >
+		<logger level="INFO" doc:name="Logger" doc:id="ac6688f2-2b59-4aad-b686-118ac056a0d4" message='#["Message is sent to " ++ vars.to as String ++ ", sendToAll Flow is called"]' />
+		<ee:transform doc:name="Transform Message" doc:id="36f69192-6016-4585-a072-823ce6ca0b7a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	originalGreeting: message.attributes.queryParams.greetingMessage,
+	"dummy payload": payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="sendTwilioMessage" doc:id="5cb61d76-eb88-4d5c-ace5-1920ca61d27c" >
+		<http:listener doc:name="POST/ messages" doc:id="0e21b2a4-e953-49b2-b992-d0d0ebb6f7af" config-ref="http_Listener_Config" path="/messages" allowedMethods="POST" />
+		<set-variable value="#[payload.message]" doc:name="message" doc:id="817e5fc3-23d8-43c2-8f27-f19f0e7014ed" variableName="message" />
+		<set-variable value="#[payload.number]" doc:name="phone_number" doc:id="13be4a5c-c2b6-4b1f-903c-1d618aafa519" variableName="number" />
+		<ee:transform doc:name="transform_message" doc:id="92f8c67f-b75a-4d67-a370-413077c91674" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/x-www-form-urlencoded
+---
+{
+	From: "+16787265106",
+	To: vars.number,
+	Body: vars.message
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<twilio:create20100401-accounts-messagesjson-by-account-sid doc:id="7016e854-7519-4d97-b728-fd8ef28adfd1" config-ref="Twilio_Connector_Config" accountSid="${secure::twilio.username}" doc:name="send_message" />
+		<ee:transform doc:name="output_message" doc:id="e8e5635b-5fde-4149-b109-9401c47f7109" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":"message sent",
+	"data":payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="interface-test-suite.xml" />
+	<munit:test name="interface-test-suite-get:\helloWorld:hello-world-configTest" doc:id="dfaa5d3e-c4f5-4baf-a6fe-0b64bb58cb36" description="Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="0aee6f8b-2366-4f21-9866-e10819db2de0" >
+				<munit:attributes value="#[{ queryParams:&#10; { 'greetingMessage' :  'Good Morning', 'greetingTo' : 'Arvind'}}]" mediaType="application/java" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get:\helloWorld:hello-world-config" doc:id="42d78557-c5c2-44b0-b847-d557c251c303" name="get:\helloWorld:hello-world-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4f9d1580-8ad2-4dbd-b0ba-977f2463352c" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="interface-test-suite-get:\helloWorld:hello-world-configTest-Purushotham" doc:id="191686db-7712-40ea-8736-e702141ebf1f" description="Test">
+			<munit:execution>
+				<munit:set-event doc:name="Set Event" doc:id="92274eb3-1987-4f2e-a0fb-cf621ec63583">
+				<munit:attributes value="#[{ queryParams:&#10; { 'greetingMessage' :  'Good Morning', 'greetingTo' : 'Purushotham'}}]" mediaType="application/java" />
+				</munit:set-event>
+				<flow-ref doc:name="Flow-ref to get:\helloWorld:hello-world-config" doc:id="104b127a-5430-4473-9909-48629b7b072a" name="get:\helloWorld:hello-world-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that" doc:id="278bd7b0-26e9-48ff-bffb-c15ce1c7af0b" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="interface-test-suite-get:\helloWorld:hello-world-configTest-Others" doc:id="2632ac18-7e89-4346-89cb-5941bc061b47" description="Test">
+			<munit:execution>
+			<munit:set-event doc:name="Set Event" doc:id="bc8beb1f-64a9-43b1-8c17-4fa09fc53f96">
+				<munit:attributes value="#[{ queryParams:&#10; { 'greetingMessage' :  'Good Morning', 'greetingTo' : 'Others'}}]" mediaType="application/java" />
+				</munit:set-event>
+				<flow-ref doc:name="Flow-ref to get:\helloWorld:hello-world-config" doc:id="dc981fff-993d-46e5-9d03-5d17e9eff25f" name="get:\helloWorld:hello-world-config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that" doc:id="bb404a64-4e36-44d7-99fd-84bd29d9f08b" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+			</munit:validation>
+		</munit:test>
+
+
+</mule>

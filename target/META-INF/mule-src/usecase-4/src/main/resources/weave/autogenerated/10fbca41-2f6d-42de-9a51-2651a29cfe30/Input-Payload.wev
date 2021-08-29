@@ -1,0 +1,13 @@
+%dw 2.0
+
+type auto_10fbca41_2f6d_42de_9a51_2651a29cfe30_Input_Payload = {
+  response: String, 
+  origin: String, 
+  responder: {
+    responderID: Number, 
+    responderName: String, 
+    _?: Any
+  }, 
+  _?: Any
+}
+

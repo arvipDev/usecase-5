@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_a3b7a5ac_339d_407e_8a0b_5da3c41230e8_Output_Variables_greetingMessage = String | Null
+
